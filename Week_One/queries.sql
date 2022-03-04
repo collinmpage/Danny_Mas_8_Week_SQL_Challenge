@@ -13,6 +13,14 @@ SELECT sales.customer_id, COUNT(DISTINCT sales.order_date) FROM dannys_diner.sal
 GROUP BY sales.customer_id
 
 -- 3. What was the first item from the menu purchased by each customer?
+WITH first_sales (
+  SELECT sales.customer_id, sales.order_date, menu.product_name
+  FROM dannys_diner.sales
+  JOIN dannys_diner.menu
+  ON menu.product_id = sales.product_id
+  GROUP BY sales.customer_id, sales.order_date, menu.product_name
+  ORDER BY sales.order_date ASC;
+  )
 
 
 -- 4. What is the most purchased item on the menu and how many times was it purchased by all customers?

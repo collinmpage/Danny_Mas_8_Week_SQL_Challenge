@@ -48,6 +48,14 @@ GROUP BY counts.product_name
  
 -- OR
 
+SELECT TOP 1 (COUNT(s.product_id)) AS most_purchased, product_name
+FROM dannys_diner.sales AS s
+JOIN dannys_diner.menu AS m
+   ON s.product_id = m.product_id
+GROUP BY s.product_id, product_name
+ORDER BY most_purchased DESC;
+
+-- this method is more efficient with less lines of code. 
 
 
 -- 5. Which item was the most popular for each customer?

@@ -13,14 +13,22 @@ SELECT sales.customer_id, COUNT(DISTINCT sales.order_date) FROM dannys_diner.sal
 GROUP BY sales.customer_id
 
 -- 3. What was the first item from the menu purchased by each customer?
-WITH first_sales (
-  SELECT sales.customer_id, sales.order_date, menu.product_name
-  FROM dannys_diner.sales
-  JOIN dannys_diner.menu
-  ON menu.product_id = sales.product_id
-  GROUP BY sales.customer_id, sales.order_date, menu.product_name
-  ORDER BY sales.order_date ASC;
+WITH first_sales AS 
+(
+  SELECT customer_id, order_date, product_name,
+  DENSE_RANK() 
+  OVER 
+  (PARTITION BY s.customer_id 
+   ORDER BY s.order_date) AS rank
+  FROM dannys_diner.sales AS s
+  JOIN dannys_diner.menu AS m
+  ON m.product_id = s.product_id
   )
+
+SELECT customer_id, order_date, product_name
+FROM first_sales
+WHERE rank = 1
+GROUP BY customer_id, order_date, product_name;
 
 
 -- 4. What is the most purchased item on the menu and how many times was it purchased by all customers?

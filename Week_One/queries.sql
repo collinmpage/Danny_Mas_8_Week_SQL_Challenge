@@ -60,20 +60,23 @@ ORDER BY most_purchased DESC;
 
 -- 5. Which item was the most popular for each customer?
 
-WITH most_popular_1 AS (
-SELECT COUNT(s.product_id) AS max, m.product_name, s.customer_id,
+WITH most_popular_1 AS 
+-- creating the temporary table 'most_popular_1' --
+( 
+SELECT COUNT(s.product_id) AS max, m.product_name, s.customer_id, 
   DENSE_RANK()
   OVER (PARTITION BY s.customer_id ORDER BY COUNT(s.product_id) DESC) AS rank
+  -- creating a rank order of the dishes ordered by customers, by quantity that they were ordered --
+  -- the order by count DESC puts them in descending order, the dense_rank ranks them accordingly--
 FROM dannys_diner.sales AS s
 JOIN dannys_diner.menu AS m
 ON m.product_id = s.product_id
 GROUP BY m.product_name, s.customer_id
 )
-
-
-
+-- temporary table helps select function below-- 
 SELECT customer_id, product_name AS most_popular_dish, max AS quantity_ordered FROM most_popular_1
 WHERE rank = 1;
+-- WHERE rank = 1 only returns the top ranked orders
 
 
 

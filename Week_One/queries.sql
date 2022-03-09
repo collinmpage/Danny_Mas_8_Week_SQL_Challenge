@@ -146,10 +146,27 @@ JOIN dannys_diner.menu as m
 ON m.product_id = member_sales.product_id
 GROUP BY customer_id;
 
--- here we are using the sum function on the price column of the menue table, this returns the total of the purchase.
+-- here we are using the sum function on the price column of the menu table, this returns the total of the purchase.
 
 -- 9.  If each $1 spent equates to 10 points and sushi has a 2x points multiplier - how many points would each customer have?
+
+WITH member_sales AS 
+(
+   SELECT s.customer_id, s.order_date, s.product_id,
+  CASE
+  WHEN s.product_id = 1
+  THEN price * 20
+  ELSE price * 10 
+  END AS points
+   FROM dannys_diner.sales AS s
+   JOIN dannys_diner.menu AS m
+      ON s.product_id = m.product_id
+)
+SELECT customer_id, SUM(points) as total_points FROM member_sales
+JOIN dannys_diner.menu as m
+ON m.product_id = member_sales.product_id
+GROUP BY customer_id;
+
 -- 10. In the first week after a customer joins the program (including their join date) they earn 2x points on all items, not just sushi - how many points do customer A and B have at the end of January?
 
--- Example Query:
 

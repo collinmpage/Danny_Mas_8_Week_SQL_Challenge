@@ -199,3 +199,23 @@ WHERE order_date < '2021-02-01T00:00:00.000Z'
 GROUP BY customer_id;
 
 -- the returned table here provides us with all the members purchases made while a member(purchases eligible for points), during the month of Jan (Before Feb 1)
+
+          ---BONUS QUESTIONS---
+
+-- 1. Join All The Things - Recreate the table with: customer_id, order_date, product_name, price, member (Y/N)
+
+SELECT s.customer_id, s.order_date, m.product_name, m.price, 
+CASE
+WHEN members.join_date <= s.order_date
+THEN 'Y'
+ELSE 'N'
+END AS member_purchase
+FROM dannys_diner.sales AS s
+JOIN dannys_diner.menu AS m
+ON s.product_id = m.product_id
+JOIN dannys_diner.members
+ON members.customer_id = s.customer_id;
+
+-- 2. Rank All The Things - Danny also requires further information about the ranking of customer products, but he purposely does not need the ranking for non-member
+--    purchases so he expects null ranking values for the records when customers are not yet part of the loyalty program.
+

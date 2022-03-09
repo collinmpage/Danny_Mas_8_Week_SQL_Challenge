@@ -102,8 +102,6 @@ GROUP BY customer_id, order_date, product_name;
 -- Here we filter the desired columns, we add the JOIN so we can see the product name instead of the ID in the answer.
 -- The where statement insures that we are only getting the first item that the individual ordered.
 
---this line of code is to check that github is configured correctly
-
 -- 7. Which item was purchased just before the customer became a member?
 -- 8. What is the total items and amount spent for each member before they became a member?
 -- 9.  If each $1 spent equates to 10 points and sushi has a 2x points multiplier - how many points would each customer have?

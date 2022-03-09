@@ -216,6 +216,9 @@ ON s.product_id = m.product_id
 LEFT JOIN dannys_diner.members
 ON members.customer_id = s.customer_id;
 
+-- we dont need a temporary table for this as it is a simple join. Be sure to use the left join when adding members, as it will only join when there are matching values.
+-- because customer C is not a member, we need to use the left join.
+
 -- 2. Rank All The Things - Danny also requires further information about the ranking of customer products, but he purposely does not need the ranking for non-member
 --    purchases so he expects null ranking values for the records when customers are not yet part of the loyalty program.
 
@@ -233,11 +236,16 @@ LEFT JOIN dannys_diner.members
 ON members.customer_id = s.customer_id
 )
 
+-- this is the same first step as the first bonus question.
+
 SELECT customer_id, order_date, product_name, price, member_purchase,
 CASE
 WHEN member_purchase = 'Y'
-THEN DENSE_RANK() OVER(PARTITION BY member_purchase ORDER BY order_date)
+THEN DENSE_RANK() OVER(PARTITION BY member_purchase, customer_id ORDER BY order_date)
 ELSE null
 END AS ranking
 FROM new_table
 ORDER BY customer_id, order_date;
+
+-- here we are using some logic to rank all of the member_purchases and customer_id by the order date. The next part of the logic changes anything with member_purchase
+-- equaling to 'N' to null as we don't want to count them/ We then order it by the customer_id and then the order_date

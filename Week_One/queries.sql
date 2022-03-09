@@ -150,7 +150,7 @@ GROUP BY customer_id;
 
 -- 9.  If each $1 spent equates to 10 points and sushi has a 2x points multiplier - how many points would each customer have?
 
-WITH member_sales AS 
+WITH point_totals AS 
 (
    SELECT s.customer_id, s.order_date, s.product_id,
   CASE
@@ -162,10 +162,14 @@ WITH member_sales AS
    JOIN dannys_diner.menu AS m
       ON s.product_id = m.product_id
 )
-SELECT customer_id, SUM(points) as total_points FROM member_sales
-JOIN dannys_diner.menu as m
-ON m.product_id = member_sales.product_id
+
+-- this creates a temporary table that displays the total orders along with how many points each order is worth.
+-- The logic statement states that product_id = 1, or sushi, is equal to 20 points per dollar, or price. The others are worth 10.
+
+SELECT customer_id, SUM(points) as total_points FROM point_totals
 GROUP BY customer_id;
+
+-- this simple sum fuction creates a new column called total_points, summing everything in each customer_id
 
 -- 10. In the first week after a customer joins the program (including their join date) they earn 2x points on all items, not just sushi - how many points do customer A and B have at the end of January?
 

@@ -115,11 +115,16 @@ WITH member_sales AS
    WHERE s.order_date < m.join_date
 )
 
+-- This question is similar to the previous one. Instead, we order the date and set DESC to go from the most recent date backwards.
+-- We change the WHERE to only include dates that happened prior to the individual becoming a member.
+
 SELECT customer_id, order_date, product_name FROM member_sales
 JOIN dannys_diner.menu as m
 ON m.product_id = member_sales.product_id
 WHERE rank = 1
 GROUP BY customer_id, order_date, product_name;
+
+-- this portion is the same as the question before.
 
 -- 8. What is the total items and amount spent for each member before they became a member?
 -- 9.  If each $1 spent equates to 10 points and sushi has a 2x points multiplier - how many points would each customer have?

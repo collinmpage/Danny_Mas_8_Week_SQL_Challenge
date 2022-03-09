@@ -78,9 +78,26 @@ SELECT customer_id, product_name AS most_popular_dish, max AS quantity_ordered F
 WHERE rank = 1;
 -- WHERE rank = 1 only returns the top ranked orders
 
-
-
 -- 6. Which item was purchased first by the customer after they became a member?
+
+WITH member_sales AS 
+(
+   SELECT s.customer_id, m.join_date, s.order_date, s.product_id,
+      DENSE_RANK() OVER(PARTITION BY s.customer_id
+      ORDER BY s.order_date) AS rank
+   FROM dannys_diner.sales AS s
+   JOIN dannys_diner.members AS m
+      ON s.customer_id = m.customer_id
+   WHERE s.order_date >= m.join_date
+)
+
+SELECT customer_id, order_date, product_name FROM member_sales
+JOIN dannys_diner.menu as m
+ON m.product_id = member_sales.product_id
+WHERE rank = 1
+GROUP BY customer_id, order_date, product_name;
+
+
 -- 7. Which item was purchased just before the customer became a member?
 -- 8. What is the total items and amount spent for each member before they became a member?
 -- 9.  If each $1 spent equates to 10 points and sushi has a 2x points multiplier - how many points would each customer have?

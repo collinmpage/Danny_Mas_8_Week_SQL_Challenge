@@ -90,6 +90,8 @@ WITH member_sales AS
       ON s.customer_id = m.customer_id
    WHERE s.order_date >= m.join_date
 )
+-- the above ranks the orders by the date that they were ordered, and the Where statement filters out the orders that
+-- existed only after the individual became a member. We also see the JOIN statement adding the member join date
 
 SELECT customer_id, order_date, product_name FROM member_sales
 JOIN dannys_diner.menu as m
@@ -97,6 +99,8 @@ ON m.product_id = member_sales.product_id
 WHERE rank = 1
 GROUP BY customer_id, order_date, product_name;
 
+-- Here we filter the desired columns, we add the JOIN so we can see the product name instead of the ID in the answer.
+-- The where statement insures that we are only getting the first item that the individual ordered.
 
 -- 7. Which item was purchased just before the customer became a member?
 -- 8. What is the total items and amount spent for each member before they became a member?

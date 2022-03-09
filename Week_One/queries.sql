@@ -127,6 +127,27 @@ GROUP BY customer_id, order_date, product_name;
 -- this portion is the same as the question before.
 
 -- 8. What is the total items and amount spent for each member before they became a member?
+
+WITH member_sales AS 
+(
+   SELECT s.customer_id, m.join_date, s.order_date, s.product_id,
+      DENSE_RANK() OVER(PARTITION BY s.customer_id
+      ORDER BY s.order_date ) AS rank
+   FROM dannys_diner.sales AS s
+   JOIN dannys_diner.members AS m
+      ON s.customer_id = m.customer_id
+   WHERE s.order_date < m.join_date
+)
+
+-- This is portion is the same as the previous question. We're creating a temporary table that only displace purchases prior to membership.
+
+SELECT customer_id, SUM(price) as total_spent_before_member FROM member_sales
+JOIN dannys_diner.menu as m
+ON m.product_id = member_sales.product_id
+GROUP BY customer_id;
+
+-- here we are using the sum function on the price column of the menue table, this returns the total of the purchase.
+
 -- 9.  If each $1 spent equates to 10 points and sushi has a 2x points multiplier - how many points would each customer have?
 -- 10. In the first week after a customer joins the program (including their join date) they earn 2x points on all items, not just sushi - how many points do customer A and B have at the end of January?
 

@@ -213,7 +213,7 @@ END AS member_purchase
 FROM dannys_diner.sales AS s
 JOIN dannys_diner.menu AS m
 ON s.product_id = m.product_id
-JOIN dannys_diner.members
+LEFT JOIN dannys_diner.members
 ON members.customer_id = s.customer_id;
 
 -- 2. Rank All The Things - Danny also requires further information about the ranking of customer products, but he purposely does not need the ranking for non-member

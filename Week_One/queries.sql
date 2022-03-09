@@ -141,7 +141,7 @@ WITH member_sales AS
 
 -- This is portion is the same as the previous question. We're creating a temporary table that only displace purchases prior to membership.
 
-SELECT customer_id, SUM(price) as total_spent_before_member FROM member_sales
+SELECT customer_id, SUM(price) as total_spent_before_member, COUNT(member_sales.product_id) as total_items_purchased FROM member_sales
 JOIN dannys_diner.menu as m
 ON m.product_id = member_sales.product_id
 GROUP BY customer_id;
